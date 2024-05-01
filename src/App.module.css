@@ -1,0 +1,85 @@
+.app {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.calculator {
+	width: 350px;
+	background-color: #000;
+	border-radius: 30px;
+	box-shadow: 10px 5px 5px rgba(47, 45, 45, 0.7);
+}
+
+.result {
+	color: white;
+	font-size: 3em;
+	font-weight: 200;
+	padding: 30px 20px 10px;
+	text-align: right;
+}
+
+.result.active {
+	color: rgb(238, 150, 35);
+}
+
+.buttons {
+	padding: 0 10px;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap-reverse;
+}
+
+.buttons .button {
+	flex-basis: calc(100% / 3);
+	box-sizing: border-box;
+	padding: 5px 0 5px;
+}
+
+.button.zero {
+	flex-basis: calc(100% / 3 * 2);
+	padding-left: 13px;
+	padding-right: 13px;
+}
+
+.button div {
+	width: var(--button-width);
+	height: var(--button-width);
+	cursor: pointer;
+	color: white;
+	font-size: 1.5em;
+	margin: auto;
+	border-radius: var(--button-border-radius);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(75, 75, 75);
+}
+
+.button div:hover {
+	background-color: rgb(55, 55, 55);
+}
+
+.button.zero div {
+	width: 100%;
+	border-radius: var(--button-border-radius);
+}
+
+.button.equal div {
+	background-color: rgb(238, 150, 35);
+}
+
+.button.equal div:hover {
+	background-color: rgb(238, 110, 15);
+}
+
+.button.action div {
+	background-color: rgb(168, 168, 168);
+	color: black;
+}
+
+.button.action div:hover {
+	background-color: rgb(120, 120, 120);
+}

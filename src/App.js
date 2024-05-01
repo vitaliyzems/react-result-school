@@ -7,14 +7,38 @@ const formatString = (str) => {
 	return Intl.NumberFormat('Ru-ru').format(str);
 };
 
+const getCorrectClassName = (value) => {
+	if (value === '0') {
+		return 'zero';
+	}
+	if (value === '=') {
+		return 'equal';
+	}
+	if (isNaN(Number(value))) {
+		return 'action';
+	} else {
+		return '';
+	}
+};
+
 export const App = () => {
 	const [operand1, setOperand1] = useState('');
 	const [operand2, setOperand2] = useState('');
 	const [operator, setOperator] = useState('');
 	const [result, setResult] = useState('');
 
+	const isMaxNumberInput =
+		(operand1.length === 9 && !operator) || operand2.length === 9;
+	const isZeroInInput = (operand1 === '0' && !operator) || operand2 === '0';
+
 	const getResult = () => {
 		return String(operator === '+' ? +operand1 + +operand2 : operand1 - operand2);
+	};
+
+	const clearInput = () => {
+		setOperand1('');
+		setOperand2('');
+		setOperator('');
 	};
 
 	const getDisplayValue = () => {
@@ -29,27 +53,10 @@ export const App = () => {
 		}
 	};
 
-	const getCorrectClassName = (value) => {
-		if (value === '0') {
-			return 'zero';
-		}
-		if (value === '=') {
-			return 'equal';
-		}
-		if (isNaN(Number(value))) {
-			return 'action';
-		} else {
-			return '';
-		}
-	};
-
 	const onActionButtonClick = (value) => {
 		if (value === 'C') {
-			setOperand1('');
-			setOperand2('');
-			setOperator('');
+			clearInput();
 			setResult('');
-			return;
 		} else if (result) {
 			setOperand1(result);
 			setOperator(value);
@@ -71,24 +78,19 @@ export const App = () => {
 		if (operand2) {
 			const resultValue = getResult();
 			setResult(resultValue);
-			setOperand1('');
-			setOperator('');
-			setOperand2('');
+			clearInput();
 		}
 	};
 
 	const onNumButtonClick = (value) => {
-		if ((operand1.length === 9 && !operator) || operand2.length === 9) {
+		if (isMaxNumberInput) {
+			return;
+		}
+		if (value === '0' && isZeroInInput) {
 			return;
 		}
 		if (result) {
 			setResult('');
-		}
-		if (
-			(!operator && operand1 === '0' && value === '0') ||
-			(operator && operand2 === '0' && value === '0')
-		) {
-			return;
 		}
 		if (!operator) {
 			setOperand1((prev) => prev + value);

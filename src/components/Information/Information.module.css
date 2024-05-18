@@ -1,0 +1,24 @@
+.info {
+	padding: 1vmin 0;
+	font-size: 5vmin;
+	display: flex;
+	align-items: center;
+}
+
+.info-field {
+	padding: 0 5vmin;
+}
+
+.info-button {
+	background-color: rgb(63, 104, 106);
+	color: white;
+	font-size: 5vmin;
+	border: none;
+	border-radius: 1vmin;
+	padding: 1vmin 5vmin;
+	cursor: pointer;
+}
+
+.info-button:hover {
+	background-color: rgb(45, 76, 78);
+}

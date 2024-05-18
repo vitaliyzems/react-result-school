@@ -1,0 +1,26 @@
+.field {
+	--cell-size: 20vmin;
+	font-family: sans-serif;
+	display: grid;
+	grid-template-columns: repeat(3, var(--cell-size));
+	grid-template-rows: repeat(3, var(--cell-size));
+}
+
+.cell {
+	--font-size: calc(var(--cell-size) / 2);
+	--border-size: calc(var(--cell-size) / 100);
+	border: var(--border-size) solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: var(--font-size);
+	cursor: pointer;
+}
+
+.cell:nth-child(-n + 6) {
+	border-bottom: none;
+}
+
+.cell:not(:nth-child(3n)) {
+	border-right: none;
+}

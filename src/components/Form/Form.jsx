@@ -1,105 +1,49 @@
-import { useForm } from '../../hooks/useForm';
-import { useFormError } from '../../hooks/useFormError';
-import { checkMaxLength, checkMinLength, testEmail } from '../../utils/validate';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
 import styles from './Form.module.css';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const sendForm = (formData) => {
 	console.log(formData);
 };
 
+const defaultValues = { email: '', password: '', confirmPassword: '' };
+
+const fieldSchema = yup.object().shape({
+	email: yup.string().required('Обязательное поле').email('Введите корректный Email'),
+	password: yup
+		.string()
+		.required('Обязательное поле')
+		.min(6, 'Минимальная длина 6 символов')
+		.max(20, 'Максимальная длина 20 символов'),
+	confirmPassword: yup
+		.string()
+		.required('Обязательное поле')
+		.oneOf([yup.ref('password')], 'Пароли не совпадают'),
+});
+
 export const Form = () => {
-	const { getFormData, updateFormData } = useForm();
-	const { getFormError, updateFormError } = useFormError();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues,
+		resolver: yupResolver(fieldSchema),
+	});
 
-	const { email, password, confirmPassword } = getFormData();
-	const { emailError, passwordError, confirmPasswordError } = getFormError();
-
-	const onEmailChange = ({ target }) => {
-		updateFormData('email', target.value);
-
-		if (testEmail(target.value)) {
-			updateFormError('emailError', null);
-		}
-	};
-
-	const onEmailBlur = ({ target }) => {
-		let newError = null;
-
-		if (!testEmail(target.value)) {
-			newError = 'Введите корректный Email';
-		}
-
-		updateFormError('emailError', newError);
-	};
-
-	const onPasswordChange = ({ target }) => {
-		updateFormData('password', target.value);
-		updateFormData('confirmPassword', '');
-		updateFormError('confirmPasswordError', null);
-
-		let newError = null;
-
-		if (!checkMaxLength(target.value, 20)) {
-			newError = 'Максимальная длина 20 символов';
-		}
-
-		updateFormError('passwordError', newError);
-	};
-
-	const onPasswordBlur = ({ target }) => {
-		if (!checkMinLength(target.value, 6)) {
-			updateFormError('passwordError', 'Минимальная длина 6 символов');
-		}
-	};
-
-	const onConfirmPasswordChange = ({ target }) => {
-		updateFormData('confirmPassword', target.value);
-		updateFormError('confirmPasswordError', null);
-	};
-
-	const onConfirmPasswordBlur = ({ target }) => {
-		if (password !== target.value) {
-			updateFormError('confirmPasswordError', 'Пароли не совпадают');
-		}
-	};
-
-	const onSubmit = (event) => {
-		event.preventDefault();
-		let error = false;
-		if (!email) {
-			error = true;
-			updateFormError('emailError', 'Обязательное поле');
-		}
-		if (!password) {
-			error = true;
-			updateFormError('passwordError', 'Обязательное поле');
-		}
-		if (!confirmPassword) {
-			error = true;
-			updateFormError('confirmPasswordError', 'Обязательное поле');
-		}
-		if (error) {
-			return;
-		}
-		const formData = {
-			email: email.toLowerCase(),
-			password,
-			confirmPassword,
-		};
-		sendForm(formData);
-	};
+	const emailError = errors.email?.message;
+	const passwordError = errors.password?.message;
+	const confirmPasswordError = errors.confirmPassword?.message;
 
 	return (
-		<form className={styles.form} onSubmit={onSubmit}>
+		<form className={styles.form} onSubmit={handleSubmit(sendForm)}>
 			<input
 				autoComplete="email"
 				placeholder="Ваш Email"
 				type="text"
 				name="email"
-				id="email"
-				value={email}
-				onChange={onEmailChange}
-				onBlur={onEmailBlur}
+				{...register('email')}
 			/>
 			{emailError ? <span>{emailError}</span> : <span />}
 			<input
@@ -107,10 +51,7 @@ export const Form = () => {
 				placeholder="Введите пароль"
 				type="password"
 				name="password"
-				id="password"
-				value={password}
-				onChange={onPasswordChange}
-				onBlur={onPasswordBlur}
+				{...register('password')}
 			/>
 			{passwordError ? <span>{passwordError}</span> : <span />}
 			<input
@@ -118,14 +59,11 @@ export const Form = () => {
 				placeholder="Повторите пароль"
 				type="password"
 				name="confirmPassword"
-				id="confirmPassword"
-				value={confirmPassword}
-				onChange={onConfirmPasswordChange}
-				onBlur={onConfirmPasswordBlur}
+				{...register('confirmPassword')}
 			/>
 			{confirmPasswordError ? <span>{confirmPasswordError}</span> : <span />}
 			<input
-				disabled={emailError || passwordError || confirmPasswordError}
+				disabled={!!emailError || !!passwordError || !!confirmPasswordError}
 				type="submit"
 				value="Зарегистрироваться"
 			/>

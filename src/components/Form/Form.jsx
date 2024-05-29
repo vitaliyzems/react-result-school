@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useForm } from '../../hooks/useForm';
 import { useFormError } from '../../hooks/useFormError';
 import { checkMaxLength, checkMinLength, testEmail } from '../../utils/validate';
@@ -13,6 +14,8 @@ export const Form = () => {
 
 	const { email, password, confirmPassword } = getFormData();
 	const { emailError, passwordError, confirmPasswordError } = getFormError();
+
+	const submitButtonRef = useRef(null);
 
 	const onEmailChange = ({ target }) => {
 		updateFormData('email', target.value);
@@ -55,6 +58,9 @@ export const Form = () => {
 	const onConfirmPasswordChange = ({ target }) => {
 		updateFormData('confirmPassword', target.value);
 		updateFormError('confirmPasswordError', null);
+		if (target.value === password) {
+			submitButtonRef.current.focus();
+		}
 	};
 
 	const onConfirmPasswordBlur = ({ target }) => {
@@ -125,6 +131,7 @@ export const Form = () => {
 			/>
 			{confirmPasswordError ? <span>{confirmPasswordError}</span> : <span />}
 			<input
+				ref={submitButtonRef}
 				disabled={emailError || passwordError || confirmPasswordError}
 				type="submit"
 				value="Зарегистрироваться"

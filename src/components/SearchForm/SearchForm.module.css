@@ -1,0 +1,41 @@
+.searchForm div {
+	display: flex;
+}
+
+.searchForm input {
+	font-size: 20px;
+	width: 400px;
+	height: 40px;
+	padding: 0 20px 0;
+	box-sizing: border-box;
+	border-color: darkcyan;
+	border-radius: 10px 0 0 10px;
+	display: none;
+}
+
+.searchForm button {
+	font-size: 20px;
+	height: 40px;
+	border: none;
+	background-color: darkcyan;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.searchForm button[type='submit']:hover {
+	background-color: rgb(0, 181, 181);
+}
+
+.searchForm input:disabled {
+	background-color: rgb(105, 105, 105);
+	cursor: not-allowed;
+}
+
+.searchForm .visible {
+	display: block;
+}
+
+.searchForm .visible + button {
+	border-radius: 0 10px 10px 0;
+}

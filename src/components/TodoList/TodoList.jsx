@@ -13,29 +13,21 @@ import {
 export const flags = { add: 'addFlag', edit: 'editFlag' };
 
 export const TodoList = () => {
-	const [refreshTodos, setRefreshTodos] = useState(false);
 	const [todoForUpdate, setTodoForUpdate] = useState(null);
 	const [isSorting, setIsSorting] = useState(false);
 	const [searchStr, setSearchStr] = useState('');
 	const [flag, setFlag] = useState(flags.add);
 	const [filteredTodos, setFilteredTodos] = useState([]);
 
-	const { addNewTodo, isCreating } = useAddTodo(refreshTodos, setRefreshTodos);
-	const { deleteTodo, isDeleting } = useDeleteTodo(refreshTodos, setRefreshTodos);
-	const { completeTodo, isCompleting } = useCompleteTodo(refreshTodos, setRefreshTodos);
-	const { todos, loading, isGettingSortedTodos, setIsGettingSortedTodos } = useGetTodos(
-		refreshTodos,
-		setIsSorting,
-	);
-	const { updateTodo, isUpdating } = useUpdateTodo(
-		refreshTodos,
-		setRefreshTodos,
-		setFlag,
-		setTodoForUpdate,
-	);
+	const { addNewTodo, isCreating } = useAddTodo();
+	const { deleteTodo, isDeleting } = useDeleteTodo();
+	const { completeTodo, isCompleting } = useCompleteTodo();
+	const { todos, loading, isGettingSortedTodos, setIsGettingSortedTodos } =
+		useGetTodos(setIsSorting);
+	const { updateTodo, isUpdating } = useUpdateTodo(setFlag, setTodoForUpdate);
 
 	useEffect(() => {
-		setFilteredTodos([...todos]);
+		setFilteredTodos(todos);
 	}, [todos]);
 
 	useDebounce(
@@ -60,7 +52,6 @@ export const TodoList = () => {
 					<SortBtn
 						isSorting={isSorting}
 						setIsSorting={setIsSorting}
-						setRefreshTodos={setRefreshTodos}
 						isGettingSortedTodos={isGettingSortedTodos}
 						setIsGettingSortedTodos={setIsGettingSortedTodos}
 					/>

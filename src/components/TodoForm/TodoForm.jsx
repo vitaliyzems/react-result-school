@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { flags } from '..';
 import styles from './TodoForm.module.css';
 
+const stringToUpperFirstChar = (str) => {
+	const firstChar = str.charAt(0);
+	const firstCharUpper = firstChar.toUpperCase();
+	const restString = str.slice(1);
+	return firstCharUpper + restString;
+};
+
 export const AddTodoForm = ({
 	flag,
 	setFlag,
@@ -31,7 +38,7 @@ export const AddTodoForm = ({
 			return;
 		}
 		if (flag === flags.add) {
-			addNewTodo({ title: newTodoTitle, completed: false });
+			addNewTodo({ title: stringToUpperFirstChar(newTodoTitle), completed: false });
 		} else if (flag === flags.edit) {
 			updateTodo(todoForUpdate.id, { title: newTodoTitle, completed: false });
 		}
@@ -76,34 +83,4 @@ export const AddTodoForm = ({
 			<span>{todoError}</span>
 		</form>
 	);
-
-	// if (flag === flags.add) {
-	// 	return (
-	// 		<form className={styles.todoForm} onSubmit={onSubmit}>
-	// 			<input
-	// 				type="text"
-	// 				placeholder="Введите todo"
-	// 				value={newTodoTitle}
-	// 				onChange={onChange}
-	// 			/>
-	// 			<input disabled={isCreating} type="submit" value="Добавить" />
-	// 			<br />
-	// 			<span>{todoError}</span>
-	// 		</form>
-	// 	);
-	// } else if (flag === flags.edit) {
-	// 	return (
-	// 		<form className={styles.todoForm} onSubmit={onSubmit}>
-	// 			<input
-	// 				type="text"
-	// 				placeholder="Введите todo"
-	// 				value={newTodoTitle}
-	// 				onChange={onChange}
-	// 			/>
-	// 			<input disabled={isUpdating} type="submit" value="Редактировать" />
-	// 			<br />
-	// 			<span>{todoError}</span>
-	// 		</form>
-	// 	);
-	// }
 };

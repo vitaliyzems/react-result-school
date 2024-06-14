@@ -1,17 +1,18 @@
+import { ref, remove } from 'firebase/database';
 import { useState } from 'react';
+import { database } from '../firebase';
 
-export const useDeleteTodo = (refreshTodos, setRefreshTodos) => {
+export const useDeleteTodo = () => {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const deleteTodo = (todoId) => {
 		setIsDeleting(true);
 
-		fetch(`http://localhost:3003/todos/${todoId}`, { method: 'DELETE' }).finally(
-			() => {
-				setRefreshTodos(!refreshTodos);
-				setIsDeleting(false);
-			},
-		);
+		const deletingTodoRef = ref(database, `todos/${todoId}`);
+
+		remove(deletingTodoRef).finally(() => {
+			setIsDeleting(false);
+		});
 	};
 
 	return { deleteTodo, isDeleting };

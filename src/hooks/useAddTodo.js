@@ -1,19 +1,20 @@
+import { push, ref } from 'firebase/database';
 import { useState } from 'react';
+import { database } from '../firebase';
 
-export const useAddTodo = (refreshTodos, setRefreshTodos) => {
+export const useAddTodo = () => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	const addNewTodo = (newTodo) => {
 		setIsCreating(true);
 
-		fetch('http://localhost:3003/todos', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify(newTodo),
-		}).finally(() => {
-			setRefreshTodos(!refreshTodos);
-			setIsCreating(false);
-		});
+		const todosDbRef = ref(database, 'todos');
+
+		push(todosDbRef, newTodo)
+			.then()
+			.finally(() => {
+				setIsCreating(false);
+			});
 	};
 
 	return { addNewTodo, isCreating };

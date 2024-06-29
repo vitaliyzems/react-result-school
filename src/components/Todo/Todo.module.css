@@ -1,22 +1,19 @@
 .todo {
 	padding: 5px 0 5px;
-	display: flex;
-	justify-content: space-between;
+	/* text-overflow: ellipsis; */
+	/* overflow: hidden; */
 }
 
 .todo div {
-	padding-left: 50px;
 	display: flex;
+	justify-content: space-between;
+	white-space: nowrap;
+	list-style: circle;
 }
 
-.todo button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	display: flex;
-}
-
-.todo .edit {
+.todo a {
+	overflow: hidden;
+	text-overflow: ellipsis;
 	margin-right: 10px;
 }
 

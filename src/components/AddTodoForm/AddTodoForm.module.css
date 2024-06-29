@@ -26,19 +26,6 @@
 	background-color: rgb(0, 181, 181);
 }
 
-.todoForm input[type='button'] {
-	font-size: 20px;
-	height: 40px;
-	border: none;
-	background-color: rgb(219, 23, 23);
-	color: white;
-	cursor: pointer;
-}
-
-.todoForm input[type='button']:hover {
-	background-color: rgb(255, 41, 41);
-}
-
 .todoForm input:disabled {
 	background-color: rgb(105, 105, 105);
 	cursor: not-allowed;

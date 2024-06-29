@@ -1,3 +1,19 @@
 {
-  "todos": []
+  "todos": [
+    {
+      "title": "Позавтракать дома",
+      "completed": false,
+      "id": "d255"
+    },
+    {
+      "title": "Тренировка в парке",
+      "completed": false,
+      "id": "cc25"
+    },
+    {
+      "id": "b39b",
+      "title": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore aperiam nemo quisquam libero maxime iusto magni natus! In vel aspernatur architecto officiis laborum voluptatem unde beatae, repudiandae earum commodi eius!",
+      "completed": false
+    }
+  ]
 }

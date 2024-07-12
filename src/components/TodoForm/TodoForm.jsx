@@ -1,17 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { flags } from '..';
 import styles from './TodoForm.module.css';
+import { TodoContext } from '../../TodoContext';
 
-export const AddTodoForm = ({
-	flag,
-	setFlag,
-	addNewTodo,
-	updateTodo,
-	isCreating,
-	isUpdating,
-	todoForUpdate,
-	setTodoForUpdate,
-}) => {
+export const AddTodoForm = () => {
+	const {
+		flag,
+		setFlag,
+		addNewTodo,
+		updateTodo,
+		isCreating,
+		isUpdating,
+		todoForUpdate,
+		setTodoForUpdate,
+	} = useContext(TodoContext);
+
 	const [newTodoTitle, setNewTodoTitle] = useState('');
 	const [todoError, setTodoError] = useState(null);
 
@@ -76,34 +79,4 @@ export const AddTodoForm = ({
 			<span>{todoError}</span>
 		</form>
 	);
-
-	// if (flag === flags.add) {
-	// 	return (
-	// 		<form className={styles.todoForm} onSubmit={onSubmit}>
-	// 			<input
-	// 				type="text"
-	// 				placeholder="Введите todo"
-	// 				value={newTodoTitle}
-	// 				onChange={onChange}
-	// 			/>
-	// 			<input disabled={isCreating} type="submit" value="Добавить" />
-	// 			<br />
-	// 			<span>{todoError}</span>
-	// 		</form>
-	// 	);
-	// } else if (flag === flags.edit) {
-	// 	return (
-	// 		<form className={styles.todoForm} onSubmit={onSubmit}>
-	// 			<input
-	// 				type="text"
-	// 				placeholder="Введите todo"
-	// 				value={newTodoTitle}
-	// 				onChange={onChange}
-	// 			/>
-	// 			<input disabled={isUpdating} type="submit" value="Редактировать" />
-	// 			<br />
-	// 			<span>{todoError}</span>
-	// 		</form>
-	// 	);
-	// }
 };

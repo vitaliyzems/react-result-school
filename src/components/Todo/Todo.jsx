@@ -2,17 +2,20 @@ import styles from './Todo.module.css';
 import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
 import { flags } from '..';
+import { useContext } from 'react';
+import { TodoContext } from '../../TodoContext';
 
-export const Todo = ({
-	todo,
-	deleteTodo,
-	isDeleting,
-	isUpdating,
-	setFlag,
-	setTodoForUpdate,
-	completeTodo,
-	isCompleting,
-}) => {
+export const Todo = ({ todo }) => {
+	const {
+		deleteTodo,
+		isDeleting,
+		isUpdating,
+		setFlag,
+		setTodoForUpdate,
+		completeTodo,
+		isCompleting,
+	} = useContext(TodoContext);
+
 	const editButtonHandle = () => {
 		setFlag(flags.edit);
 		setTodoForUpdate(todo);

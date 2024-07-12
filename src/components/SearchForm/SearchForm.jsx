@@ -1,9 +1,12 @@
 import { CiSearch } from 'react-icons/ci';
 import { MdClear } from 'react-icons/md';
 import styles from './SearchForm.module.css';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TodoContext } from '../../TodoContext';
 
-export const SearchForm = ({ searchStr, setSearchStr }) => {
+export const SearchForm = () => {
+	const { searchStr, setSearchStr } = useContext(TodoContext);
+
 	const [showInput, setShowInput] = useState(false);
 
 	const onSubmit = (e) => {

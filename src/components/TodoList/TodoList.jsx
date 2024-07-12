@@ -9,6 +9,7 @@ import {
 	useCompleteTodo,
 	useDebounce,
 } from '../../hooks';
+import { TodoContext } from '../../TodoContext';
 
 export const flags = { add: 'addFlag', edit: 'editFlag' };
 
@@ -49,61 +50,53 @@ export const TodoList = () => {
 		800,
 	);
 
+	const contextValue = {
+		isSorting,
+		setIsSorting,
+		setRefreshTodos,
+		isGettingSortedTodos,
+		setIsGettingSortedTodos,
+		deleteTodo,
+		isDeleting,
+		isUpdating,
+		setFlag,
+		setTodoForUpdate,
+		completeTodo,
+		isCompleting,
+		flag,
+		addNewTodo,
+		isCreating,
+		todoForUpdate,
+		updateTodo,
+		searchStr,
+		setSearchStr,
+	};
+
 	if (loading) {
 		return <Loader />;
 	} else if (todos.length) {
 		return (
-			<>
+			<TodoContext.Provider value={contextValue}>
 				<h1>Список дел:</h1>
 				<div className={styles.btnWrapper}>
-					<SearchForm searchStr={searchStr} setSearchStr={setSearchStr} />
-					<SortBtn
-						isSorting={isSorting}
-						setIsSorting={setIsSorting}
-						setRefreshTodos={setRefreshTodos}
-						isGettingSortedTodos={isGettingSortedTodos}
-						setIsGettingSortedTodos={setIsGettingSortedTodos}
-					/>
+					<SearchForm />
+					<SortBtn />
 				</div>
 				<ul className={styles.todoList}>
 					{filteredTodos.map((todo) => (
-						<Todo
-							key={todo.id}
-							todo={todo}
-							deleteTodo={deleteTodo}
-							isDeleting={isDeleting}
-							isUpdating={isUpdating}
-							setFlag={setFlag}
-							setTodoForUpdate={setTodoForUpdate}
-							completeTodo={completeTodo}
-							isCompleting={isCompleting}
-						/>
+						<Todo key={todo.id} todo={todo} />
 					))}
 					{!filteredTodos.length && <div>Ничего не найдено</div>}
 				</ul>
-				<AddTodoForm
-					flag={flag}
-					setFlag={setFlag}
-					addNewTodo={addNewTodo}
-					isCreating={isCreating}
-					isUpdating={isUpdating}
-					todoForUpdate={todoForUpdate}
-					setTodoForUpdate={setTodoForUpdate}
-					updateTodo={updateTodo}
-				/>
-			</>
+				<AddTodoForm />
+			</TodoContext.Provider>
 		);
 	} else {
 		return (
-			<>
+			<TodoContext.Provider value={{ flag, addNewTodo, isCreating, isUpdating }}>
 				<h1>Список дел пуст</h1>
-				<AddTodoForm
-					flag={flag}
-					addNewTodo={addNewTodo}
-					isCreating={isCreating}
-					isUpdating={isUpdating}
-				/>
-			</>
+				<AddTodoForm />
+			</TodoContext.Provider>
 		);
 	}
 };

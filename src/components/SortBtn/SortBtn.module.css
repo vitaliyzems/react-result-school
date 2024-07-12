@@ -1,0 +1,15 @@
+.sortBtn {
+	font-size: 20px;
+	height: 40px;
+	border: none;
+	background-color: darkcyan;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+.sortBtn:disabled {
+	background-color: rgb(105, 105, 105);
+	cursor: not-allowed;
+}

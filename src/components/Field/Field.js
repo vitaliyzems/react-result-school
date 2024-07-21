@@ -1,30 +1,19 @@
+import { store } from '../../store';
 import { FieldLayout } from './FieldLayout';
-import PropTypes from 'prop-types';
 
-export const Field = ({
-	currentPlayer,
-	setCurrentPlayer,
-	isGameEnded,
-	field,
-	setField,
-}) => {
+export const Field = () => {
 	const onCellClick = (cellIdx) => {
+		const { field, currentPlayer, isGameEnded } = store.getState();
 		if (field[cellIdx] || isGameEnded) {
 			return;
 		}
-		setField((prev) =>
-			prev.map((cell, idx) => (cellIdx === idx ? currentPlayer : cell)),
+		const newField = field.map((cell, idx) =>
+			cellIdx === idx ? currentPlayer : cell,
 		);
-		setCurrentPlayer((prev) => (prev === 'X' ? 'O' : 'X'));
+		store.dispatch({ type: 'setField', payload: newField });
+		const newCurrentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+		store.dispatch({ type: 'setCurrentPlayer', payload: newCurrentPlayer });
 	};
 
-	return <FieldLayout field={field} onCellClick={onCellClick} />;
-};
-
-Field.propTypes = {
-	currentPlayer: PropTypes.oneOf(['X', 'O']),
-	setCurrentPlayer: PropTypes.func,
-	isGameEnded: PropTypes.bool,
-	field: PropTypes.arrayOf(PropTypes.string),
-	setField: PropTypes.func,
+	return <FieldLayout onCellClick={onCellClick} />;
 };

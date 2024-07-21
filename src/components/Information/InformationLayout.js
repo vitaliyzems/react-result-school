@@ -1,12 +1,9 @@
+import { store } from '../../store';
 import styles from './Information.module.css';
 import PropTypes from 'prop-types';
 
-export const InformationLayout = ({
-	currentPlayer,
-	isGameEnded,
-	isDraw,
-	onRepeatButtonClick,
-}) => {
+export const InformationLayout = ({ onRepeatButtonClick }) => {
+	const { currentPlayer, isGameEnded, isDraw } = store.getState();
 	return (
 		<div className={styles.info}>
 			{!isGameEnded && (
@@ -28,8 +25,5 @@ export const InformationLayout = ({
 };
 
 InformationLayout.propTypes = {
-	currentPlayer: PropTypes.oneOf(['X', 'O']),
-	isGameEnded: PropTypes.bool,
-	isDraw: PropTypes.bool,
 	onRepeatButtonClick: PropTypes.func,
 };

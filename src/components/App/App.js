@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppLayout } from './AppLayout';
+import { store } from '../../store';
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -13,10 +14,13 @@ const WIN_PATTERNS = [
 ];
 
 export const App = () => {
-	const [currentPlayer, setCurrentPlayer] = useState('X');
-	const [isGameEnded, setIsGameEnded] = useState(false);
-	const [isDraw, setIsDraw] = useState(false);
-	const [field, setField] = useState(Array(9).fill(''));
+	const [updateBoard, setUpdateBoard] = useState(false);
+
+	useEffect(() => {
+		return store.subscribe(() => setUpdateBoard(!updateBoard));
+	}, [updateBoard]);
+
+	const { field, isGameEnded, isDraw } = store.getState();
 
 	const checkVictory = () => {
 		for (let pattern of WIN_PATTERNS) {
@@ -31,23 +35,12 @@ export const App = () => {
 	};
 
 	if (!isGameEnded && (checkVictory() || !field.some((cell) => cell === ''))) {
-		setIsGameEnded(true);
+		store.dispatch({ type: 'setIsGameEnded', payload: true });
 	}
 
 	if (!isDraw && isGameEnded && !checkVictory()) {
-		setIsDraw(true);
+		store.dispatch({ type: 'setIsDraw', payload: true });
 	}
 
-	return (
-		<AppLayout
-			currentPlayer={currentPlayer}
-			setCurrentPlayer={setCurrentPlayer}
-			isGameEnded={isGameEnded}
-			setIsGameEnded={setIsGameEnded}
-			isDraw={isDraw}
-			setIsDraw={setIsDraw}
-			field={field}
-			setField={setField}
-		/>
-	);
+	return <AppLayout />;
 };

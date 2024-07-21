@@ -1,7 +1,9 @@
+import { store } from '../../store';
 import styles from './Field.module.css';
 import PropTypes from 'prop-types';
 
-export const FieldLayout = ({ field, onCellClick }) => {
+export const FieldLayout = ({ onCellClick }) => {
+	const { field } = store.getState();
 	return (
 		<div className={styles.field}>
 			{field.map((cell, idx) => (
@@ -14,6 +16,5 @@ export const FieldLayout = ({ field, onCellClick }) => {
 };
 
 FieldLayout.propTypes = {
-	field: PropTypes.arrayOf(PropTypes.string),
 	onCellClick: PropTypes.func,
 };

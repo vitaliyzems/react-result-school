@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react';
 import { AppLayout } from './AppLayout';
-import { store } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	fieldSelector,
+	isDrawSelector,
+	isGameEndedSelector,
+} from '../../store/selectors';
+import { setIsDraw, setIsGameEnded } from '../../store/actions';
+import { useCallback, useEffect } from 'react';
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -14,15 +20,13 @@ const WIN_PATTERNS = [
 ];
 
 export const App = () => {
-	const [updateBoard, setUpdateBoard] = useState(false);
+	const field = useSelector(fieldSelector);
+	const isGameEnded = useSelector(isGameEndedSelector);
+	const isDraw = useSelector(isDrawSelector);
 
-	useEffect(() => {
-		return store.subscribe(() => setUpdateBoard(!updateBoard));
-	}, [updateBoard]);
+	const dispatch = useDispatch();
 
-	const { field, isGameEnded, isDraw } = store.getState();
-
-	const checkVictory = () => {
+	const checkVictory = useCallback(() => {
 		for (let pattern of WIN_PATTERNS) {
 			if (
 				pattern.every((idx) => field[idx] === 'X') ||
@@ -32,15 +36,16 @@ export const App = () => {
 			}
 		}
 		return false;
-	};
+	}, [field]);
 
-	if (!isGameEnded && (checkVictory() || !field.some((cell) => cell === ''))) {
-		store.dispatch({ type: 'setIsGameEnded', payload: true });
-	}
-
-	if (!isDraw && isGameEnded && !checkVictory()) {
-		store.dispatch({ type: 'setIsDraw', payload: true });
-	}
+	useEffect(() => {
+		if (!isGameEnded && (checkVictory() || !field.some((cell) => cell === ''))) {
+			dispatch(setIsGameEnded(true));
+		}
+		if (!isDraw && isGameEnded && !checkVictory()) {
+			dispatch(setIsDraw(true));
+		}
+	}, [field, checkVictory, isDraw, isGameEnded, dispatch]);
 
 	return <AppLayout />;
 };

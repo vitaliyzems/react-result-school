@@ -1,9 +1,16 @@
-import { store } from '../../store';
+import { useSelector } from 'react-redux';
 import styles from './Information.module.css';
 import PropTypes from 'prop-types';
+import {
+	isDrawSelector,
+	isGameEndedSelector,
+	playerSelector,
+} from '../../store/selectors';
 
 export const InformationLayout = ({ onRepeatButtonClick }) => {
-	const { currentPlayer, isGameEnded, isDraw } = store.getState();
+	const currentPlayer = useSelector(playerSelector);
+	const isGameEnded = useSelector(isGameEndedSelector);
+	const isDraw = useSelector(isDrawSelector);
 	return (
 		<div className={styles.info}>
 			{!isGameEnded && (

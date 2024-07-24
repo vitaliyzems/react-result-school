@@ -1,12 +1,19 @@
-import { store } from '../../store';
+import { useDispatch } from 'react-redux';
 import { InformationLayout } from './InformationLayout';
+import {
+	setCurrentPlayer,
+	setField,
+	setIsDraw,
+	setIsGameEnded,
+} from '../../store/actions';
 
 export const Information = () => {
+	const dispatch = useDispatch();
 	const onRepeatButtonClick = () => {
-		store.dispatch({ type: 'setCurrentPlayer', payload: 'X' });
-		store.dispatch({ type: 'setIsGameEnded', payload: false });
-		store.dispatch({ type: 'setIsDraw', payload: false });
-		store.dispatch({ type: 'setField', payload: Array(9).fill('') });
+		dispatch(setCurrentPlayer('X'));
+		dispatch(setIsGameEnded(false));
+		dispatch(setIsDraw(false));
+		dispatch(setField(Array(9).fill('')));
 	};
 	return <InformationLayout onRepeatButtonClick={onRepeatButtonClick} />;
 };

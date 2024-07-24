@@ -1,18 +1,29 @@
-import { store } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
 import { FieldLayout } from './FieldLayout';
+import {
+	fieldSelector,
+	isGameEndedSelector,
+	playerSelector,
+} from '../../store/selectors';
+import { setCurrentPlayer, setField } from '../../store/actions';
 
 export const Field = () => {
+	const field = useSelector(fieldSelector);
+	const currentPlayer = useSelector(playerSelector);
+	const isGameEnded = useSelector(isGameEndedSelector);
+
+	const dispatch = useDispatch();
+
 	const onCellClick = (cellIdx) => {
-		const { field, currentPlayer, isGameEnded } = store.getState();
 		if (field[cellIdx] || isGameEnded) {
 			return;
 		}
 		const newField = field.map((cell, idx) =>
 			cellIdx === idx ? currentPlayer : cell,
 		);
-		store.dispatch({ type: 'setField', payload: newField });
+		dispatch(setField(newField));
 		const newCurrentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-		store.dispatch({ type: 'setCurrentPlayer', payload: newCurrentPlayer });
+		dispatch(setCurrentPlayer(newCurrentPlayer));
 	};
 
 	return <FieldLayout onCellClick={onCellClick} />;

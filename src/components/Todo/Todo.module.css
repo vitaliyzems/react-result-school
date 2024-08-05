@@ -1,0 +1,25 @@
+.todo {
+	padding: 5px 0 5px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.todo div {
+	padding-left: 50px;
+	display: flex;
+}
+
+.todo button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+}
+
+.todo .edit {
+	margin-right: 10px;
+}
+
+.checked {
+	text-decoration: line-through;
+}

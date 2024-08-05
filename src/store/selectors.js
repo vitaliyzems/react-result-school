@@ -1,0 +1,9 @@
+export const todosSelector = (state) => state.todos.todos;
+export const isLoadingTodosSelector = (state) => state.todos.isLoading;
+export const todoForUpdateSelector = (state) => state.todos.todoForUpdate;
+export const isDisabledButtonsSelector = (state) => state.options.isDisabledButtons;
+export const searchStrSelector = (state) => state.options.searchStr;
+export const searchInputValueSelector = (state) => state.options.searchInputValue;
+export const isShowSearchInputSelector = (state) => state.options.isShowSearchInput;
+export const isSortingSelector = (state) => state.options.isSorting;
+export const inputFlagSelector = (state) => state.options.inputFlag;

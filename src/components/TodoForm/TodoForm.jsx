@@ -1,19 +1,25 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { flags } from '..';
+import { useEffect, useRef, useState } from 'react';
+import { inputFlags } from '../../constants';
 import styles from './TodoForm.module.css';
-import { TodoContext } from '../../TodoContext';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	addNewTodoAction,
+	setInputFlagAction,
+	setTodoForUpdateAction,
+	updateTodoAction,
+} from '../../store/actions';
+import {
+	inputFlagSelector,
+	isDisabledButtonsSelector,
+	todoForUpdateSelector,
+} from '../../store/selectors';
 
 export const AddTodoForm = () => {
-	const {
-		flag,
-		setFlag,
-		addNewTodo,
-		updateTodo,
-		isCreating,
-		isUpdating,
-		todoForUpdate,
-		setTodoForUpdate,
-	} = useContext(TodoContext);
+	const flag = useSelector(inputFlagSelector);
+	const todoForUpdate = useSelector(todoForUpdateSelector);
+	const isDisabled = useSelector(isDisabledButtonsSelector);
+
+	const dispatch = useDispatch();
 
 	const [newTodoTitle, setNewTodoTitle] = useState('');
 	const [todoError, setTodoError] = useState(null);
@@ -33,12 +39,26 @@ export const AddTodoForm = () => {
 			setTodoError('Поле не должно быть пустым');
 			return;
 		}
-		if (flag === flags.add) {
-			addNewTodo({ title: newTodoTitle, completed: false });
-		} else if (flag === flags.edit) {
-			updateTodo(todoForUpdate.id, { title: newTodoTitle, completed: false });
+
+		const title = newTodoTitle.charAt(0).toUpperCase() + newTodoTitle.slice(1);
+
+		if (flag === inputFlags.add) {
+			const newTodo = {
+				title,
+				completed: false,
+				createdAt: Date.now(),
+			};
+			dispatch(addNewTodoAction(newTodo));
+			setNewTodoTitle('');
+		} else if (flag === inputFlags.edit) {
+			dispatch(
+				updateTodoAction({
+					...todoForUpdate,
+					title,
+				}),
+			);
+			setNewTodoTitle('');
 		}
-		setNewTodoTitle('');
 	};
 
 	const onChange = ({ target }) => {
@@ -47,8 +67,8 @@ export const AddTodoForm = () => {
 	};
 
 	const cancelHandle = () => {
-		setFlag(flags.add);
-		setTodoForUpdate(null);
+		dispatch(setInputFlagAction(inputFlags.add));
+		dispatch(setTodoForUpdateAction(null));
 		setNewTodoTitle('');
 	};
 
@@ -61,18 +81,18 @@ export const AddTodoForm = () => {
 				onChange={onChange}
 				ref={ref}
 			/>
-			{flag === flags.add && (
-				<input disabled={isCreating} type="submit" value="Добавить" />
+			{flag === inputFlags.add && (
+				<input disabled={isDisabled} type="submit" value="Добавить" />
 			)}
-			{flag === flags.edit && (
+			{flag === inputFlags.edit && (
 				<>
 					<input
-						disabled={isUpdating}
+						disabled={isDisabled}
 						type="button"
 						value="Отменить"
 						onClick={cancelHandle}
 					/>
-					<input disabled={isUpdating} type="submit" value="Редактировать" />
+					<input disabled={isDisabled} type="submit" value="Редактировать" />
 				</>
 			)}
 			<br />

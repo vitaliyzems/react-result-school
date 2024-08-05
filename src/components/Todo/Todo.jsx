@@ -1,28 +1,35 @@
 import styles from './Todo.module.css';
 import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
-import { flags } from '..';
-import { useContext } from 'react';
-import { TodoContext } from '../../TodoContext';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	completeTodoAction,
+	deleteTodoAction,
+	setInputFlagAction,
+	setShowSearchInputAction,
+	setTodoForUpdateAction,
+} from '../../store/actions';
+import { inputFlags } from '../../constants';
+import { isDisabledButtonsSelector } from '../../store/selectors';
 
 export const Todo = ({ todo }) => {
-	const {
-		deleteTodo,
-		isDeleting,
-		isUpdating,
-		setFlag,
-		setTodoForUpdate,
-		completeTodo,
-		isCompleting,
-	} = useContext(TodoContext);
+	const isDisabled = useSelector(isDisabledButtonsSelector);
+	const dispatch = useDispatch();
 
 	const editButtonHandle = () => {
-		setFlag(flags.edit);
-		setTodoForUpdate(todo);
+		dispatch(setShowSearchInputAction(false));
+		dispatch(setInputFlagAction(inputFlags.edit));
+		dispatch(setTodoForUpdateAction(todo));
 	};
 
-	const changeHandle = ({ target }) => {
-		completeTodo(todo, target.checked);
+	const deleteButtonHandle = () => {
+		dispatch(setShowSearchInputAction(false));
+		dispatch(deleteTodoAction(todo.id));
+	};
+
+	const changeHandle = () => {
+		dispatch(setShowSearchInputAction(false));
+		dispatch(completeTodoAction(todo));
 	};
 
 	return (
@@ -33,22 +40,22 @@ export const Todo = ({ todo }) => {
 				{todo.title}
 				<div>
 					<input
-						disabled={isCompleting || isUpdating || isDeleting}
+						disabled={isDisabled}
 						type="checkbox"
 						checked={todo.completed}
 						onChange={changeHandle}
 					/>
 					<button
 						onClick={editButtonHandle}
-						disabled={isUpdating || isDeleting || isCompleting}
+						disabled={isDisabled}
 						className="edit"
 					>
 						<CiEdit size={'1.5rem'} />
 					</button>
 					<button
-						disabled={isDeleting || isUpdating || isCompleting}
+						disabled={isDisabled}
 						className="delete"
-						onClick={() => deleteTodo(todo.id)}
+						onClick={deleteButtonHandle}
 					>
 						<MdDelete size={'1.5rem'} />
 					</button>

@@ -1,36 +1,29 @@
-import { useSelector } from 'react-redux';
-import styles from './Information.module.css';
-import PropTypes from 'prop-types';
-import {
-	isDrawSelector,
-	isGameEndedSelector,
-	playerSelector,
-} from '../../store/selectors';
+import { Component } from 'react';
 
-export const InformationLayout = ({ onRepeatButtonClick }) => {
-	const currentPlayer = useSelector(playerSelector);
-	const isGameEnded = useSelector(isGameEndedSelector);
-	const isDraw = useSelector(isDrawSelector);
-	return (
-		<div className={styles.info}>
-			{!isGameEnded && (
-				<div className={styles['info-field']}>Сейчас ходит: {currentPlayer}</div>
-			)}
-			{isGameEnded && !isDraw && (
-				<div className={styles['info-field']}>
-					Победил: {currentPlayer === 'X' ? 'O' : 'X'}
-				</div>
-			)}
-			{isDraw && <div className={styles['info-field']}>Ничья</div>}
-			{isGameEnded && (
-				<button className={styles['info-button']} onClick={onRepeatButtonClick}>
-					Заново
-				</button>
-			)}
-		</div>
-	);
-};
-
-InformationLayout.propTypes = {
-	onRepeatButtonClick: PropTypes.func,
-};
+export class InformationLayout extends Component {
+	render() {
+		return (
+			<div className="py-[1vmin] px-0 text-[5vmin] flex items-center">
+				{!this.props.isGameEnded && (
+					<div className="px-[5vmin] py-0">
+						Сейчас ходит: {this.props.currentPlayer}
+					</div>
+				)}
+				{this.props.isGameEnded && !this.props.isDraw && (
+					<div className="px-[5vmin] py-0">
+						Победил: {this.props.currentPlayer === 'X' ? 'O' : 'X'}
+					</div>
+				)}
+				{this.props.isDraw && <div className="px-[5vmin] py-0">Ничья</div>}
+				{this.props.isGameEnded && (
+					<button
+						className="bg-[#3f686a] text-white text-[5vmin] border-none rounded-[1vmin] px-[5vmin] py-[1vmin] cursor-pointer [&:hover]:bg-[#2d4c4e]"
+						onClick={this.props.onRepeatButtonClick}
+					>
+						Заново
+					</button>
+				)}
+			</div>
+		);
+	}
+}

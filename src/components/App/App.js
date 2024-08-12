@@ -1,51 +1,40 @@
 import { AppLayout } from './AppLayout';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-	fieldSelector,
-	isDrawSelector,
-	isGameEndedSelector,
-} from '../../store/selectors';
+import { connect } from 'react-redux';
 import { setIsDraw, setIsGameEnded } from '../../store/actions';
-import { useCallback, useEffect } from 'react';
+import { Component } from 'react';
+import { checkVictory } from '../../utils';
 
-const WIN_PATTERNS = [
-	[0, 1, 2],
-	[3, 4, 5],
-	[6, 7, 8],
-	[0, 3, 6],
-	[1, 4, 7],
-	[2, 5, 8],
-	[0, 4, 8],
-	[2, 4, 6],
-];
-
-export const App = () => {
-	const field = useSelector(fieldSelector);
-	const isGameEnded = useSelector(isGameEndedSelector);
-	const isDraw = useSelector(isDrawSelector);
-
-	const dispatch = useDispatch();
-
-	const checkVictory = useCallback(() => {
-		for (let pattern of WIN_PATTERNS) {
-			if (
-				pattern.every((idx) => field[idx] === 'X') ||
-				pattern.every((idx) => field[idx] === 'O')
-			) {
-				return true;
-			}
+class AppContainer extends Component {
+	componentDidUpdate() {
+		if (
+			!this.isGameEnded &&
+			(checkVictory(this.props.field) ||
+				!this.props.field.some((cell) => cell === ''))
+		) {
+			this.props.setIsGameEndedAction(true);
 		}
-		return false;
-	}, [field]);
-
-	useEffect(() => {
-		if (!isGameEnded && (checkVictory() || !field.some((cell) => cell === ''))) {
-			dispatch(setIsGameEnded(true));
+		if (
+			!this.props.isDraw &&
+			this.props.isGameEnded &&
+			!checkVictory(this.props.field)
+		) {
+			this.props.setIsDrawAction(true);
 		}
-		if (!isDraw && isGameEnded && !checkVictory()) {
-			dispatch(setIsDraw(true));
-		}
-	}, [field, checkVictory, isDraw, isGameEnded, dispatch]);
+	}
+	render() {
+		return <AppLayout />;
+	}
+}
 
-	return <AppLayout />;
-};
+const mapStateToProps = (state) => ({
+	field: state.field.field,
+	isGameEnded: state.game.isGameEnded,
+	isDraw: state.game.isDraw,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	setIsGameEndedAction: (isGameEnded) => dispatch(setIsGameEnded(isGameEnded)),
+	setIsDrawAction: (isDraw) => dispatch(setIsDraw(isDraw)),
+});
+
+export const App = connect(mapStateToProps, mapDispatchToProps)(AppContainer);
